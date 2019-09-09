@@ -2,6 +2,7 @@ const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 const LocalStrategy = require('passport-local').Strategy;
+const GooglePlusTokenStrategy = require('passport-google-plus-token');
 const User = require('./models/user');
 
 //JSON Web Tokens Strategy
@@ -30,16 +31,58 @@ passport.use(new JwtStrategy({
 passport.use(new LocalStrategy({
   usernameField: 'email'
 }, async (email, password, done) => {
-  //Find the user given the email
-  const user = await User.findOne({ email });
-  
-  //If not, handle it
-  if(!user) {
-    return done(null, false);
+  try {
+    //Find the user given the email
+    const user = await User.findOne({ "local.email" : email });
+    
+    //If not, handle it
+    if(!user) {
+      return done(null, false);
+    }
+    //Check if the password is correct
+    const isMatch = await user.isValidPassword(password);
+    
+    //if not, handle it
+    if(!isMatch) {
+      done(null, false);
+    }
+    
+    //Otherwise return the user
+    done(null, user);
+  } catch (e) {
+    done(e, false);
   }
-  //Check if the password is correct
+}))
 
-  //if not, handle it
 
-  //Otherwise return the user
+//Google Oauth Strategy
+passport.use('googleToken', new GooglePlusTokenStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    console.log(accessToken);
+    console.log(refreshToken);
+    console.log(profile);
+  
+    //Check whether this current user exists in our DB
+    const existingUser = await User.findOne({ "google.id": profile.id });
+    if(existingUser) {
+      console.log('user exist');
+      return done(null, existingUser);
+    }
+    console.log('user doesn not exist');
+    //If new account
+    const newUser = new User({
+      method: 'google',
+      google: {
+        id: profile.id,
+        email: profile.emails[0].value
+      }
+    })
+    await newUser.save();
+    done(null, newUser);
+  } catch (e) {
+    done(e, false, e.message);
+  }
 }))

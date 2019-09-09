@@ -10,7 +10,13 @@ router.post(
   validateBody(schemas.authSchema),
   UsersController.signUp
 );
-router.post('/signin', UsersController.signIn);
+router.post('/signin', 
+  validateBody(schemas.authSchema), 
+  passport.authenticate('local', { session: false }), 
+  UsersController.signIn);
+
 router.get('/secret', passport.authenticate('jwt', { session: false }), UsersController.secret);
+
+router.post('/oauth/google', passport.authenticate('googleToken', { session: false }), UsersController.googleOauth);
 
 module.exports = router;
