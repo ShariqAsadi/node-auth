@@ -54,6 +54,15 @@ exports.googleOauth = async (req, res, next) => {
   }
 }
 
+exports.facebookOauth = async (req, res, next) => {
+  try {
+    console.log('facebook got here');
+    
+  } catch(e) {
+
+  }
+}
+
 exports.secret = async (req, res, next) => {
   try {
     res.json({secret: 'resource'});    
