@@ -56,8 +56,8 @@ exports.googleOauth = async (req, res, next) => {
 
 exports.facebookOauth = async (req, res, next) => {
   try {
-    console.log('facebook got here');
-    
+    const token = signToken(req.user);
+    res.status(200).json({success: true, token: token});
   } catch(e) {
 
   }
