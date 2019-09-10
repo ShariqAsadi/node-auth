@@ -16,10 +16,12 @@ const App = () => (
     <Provider store={createStore(reducers, {}, applyMiddleware(reduxThunk))}>
       <BrowserRouter>
         <Header />
-        <Route path='/' exact component={Home} />
-        <Route path='/signup' exact component={SignUp} />
-        <Route path='/signin' exact component={SignIn} />
-        <Route path='/dashboard' exact component={Dashboard} />
+        <div className='container'>
+          <Route path='/' exact component={Home} />
+          <Route path='/signup' exact component={SignUp} />
+          <Route path='/signin' exact component={SignIn} />
+          <Route path='/dashboard' exact component={Dashboard} />
+        </div>
       </BrowserRouter>
     </Provider>
   </div>
