@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 class Header extends React.Component {
   render() {
     return (
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark" style={{marginBottom: '30px'}}>
         <Link to="" className="navbar-brand">Node API Auth</Link>
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav mr-auto">

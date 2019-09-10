@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-
+const cors = require('cors');
 const app = express();
 
 if(process.env.NODE_ENV !== 'production') {
@@ -13,7 +13,7 @@ mongoose.connect(process.env.MONGO_URI, {
 })
 
 const userRoute = require('./routes/users');
-
+app.use(cors());
 //Middlewares
 app.use(morgan('dev'));
 app.use(express.json());

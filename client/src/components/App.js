@@ -1,7 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import reduxThunk from 'redux-thunk';
+
 import Header from './Header';
 import Home from './Home';
 import SignUp from './SignUp';
@@ -11,7 +13,7 @@ import reducers from '../reducers';
 
 const App = () => (
   <div>
-    <Provider store={createStore(reducers, {})}>
+    <Provider store={createStore(reducers, {}, applyMiddleware(reduxThunk))}>
       <BrowserRouter>
         <Header />
         <Route path='/' exact component={Home} />
