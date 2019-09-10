@@ -10,12 +10,21 @@ import Input from './UI/Input';
 class SignUp extends React.Component {
   onSubmit = async formData => {
     await this.props.signUp(formData);
+    if(!this.props.errorMessage) {
+      this.props.history.push('/dashboard')
+    }
   };
-  responseGoogle = res => {
-    console.log('google', res);
+  responseGoogle = async res => {
+    await this.props.oauthGoogle(res.accessToken)
+    if(!this.props.errorMessage) {
+      this.props.history.push('/dashboard')
+    }
   };
-  responseFacebook = res => {
-    console.log('facebook', res);
+  responseFacebook = async res => {
+    await this.props.oauthFacebook(res.accessToken)
+    if(!this.props.errorMessage) {
+      this.props.history.push('/dashboard')
+    }
   };
 
   render() {
@@ -69,11 +78,14 @@ class SignUp extends React.Component {
             />
             <GoogleLogin
               clientId='664346966163-h96t4noffaid6a8orh0rnq1gr81dpvc1.apps.googleusercontent.com'
-              buttonText='Login with Google'
               onSuccess={this.responseGoogle}
               onFailure={this.responseGoogle}
-              className='btn btn-outline-danger'
-              cookiePolicy={'single_host_origin'}
+              render={renderProps => (
+                <button 
+                  onClick={renderProps.onClick} 
+                  disabled={renderProps.disabled}
+                  className='btn btn-outline-danger'>Login with Google</button>
+              )}
             />
           </div>
         </div>
